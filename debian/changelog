@@ -1,3 +1,11 @@
+indicator-printers (0.1.7+17.04.20161104.3-0ubuntu1) zesty; urgency=medium
+
+  [ Michael Terry ]
+  * Work inside a snap by prefixing hard coded paths with $SNAP. (LP:
+    #1629009)
+
+ -- charles.kerr@canonical.com <charles.kerr@canonical.com>  Fri, 04 Nov 2016 19:23:16 +0000
+
 indicator-printers (0.1.7+17.04.20161026-0ubuntu1) zesty; urgency=medium
 
   [ Ted Gould ]
