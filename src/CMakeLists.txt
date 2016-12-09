@@ -1,0 +1,42 @@
+add_definitions(
+  -DGETTEXT_PACKAGE=\"${PROJECT_NAME}\"
+  -DGETTEXT_LOCALEDIR=\"${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALEDIR}\"
+  -DG_LOG_DOMAIN=\"${CMAKE_PROJECT_NAME}\"
+)
+
+include_directories(
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${SERVICE_DEPS_INCLUDE_DIRS}
+)
+link_directories(
+  ${SERVICE_DEPS_LIBRARY_DIRS}
+)
+
+add_library(${SERVICE_LIB_NAME} STATIC
+  utils.cpp
+  utils.h
+)
+
+target_link_libraries(${SERVICE_LIB_NAME}
+  ${SERVICE_DEPS_LIBS}
+  ${CUPS_LIBS}
+)
+
+
+add_executable(${SERVICE_EXEC_NAME}
+  main.cpp
+)
+
+target_link_libraries(${SERVICE_EXEC_NAME}
+  ${SERVICE_LIB_NAME}
+  ${SERVICE_DEPS_LIBRARIES}
+  ${CUPS_LIBS}
+
+  ${CMAKE_THREAD_LIBS_INIT}
+)
+
+install(
+  TARGETS ${SERVICE_EXEC}
+  RUNTIME
+  DESTINATION ${CMAKE_INSTALL_FULL_PKGLIBEXECDIR}
+)
