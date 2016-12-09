@@ -38,4 +38,3 @@ ENABLE_COVERAGE_REPORT(
   TESTS test-utils
   FILTER /usr/include ${CMAKE_BINARY_DIR}/*
 )
-
