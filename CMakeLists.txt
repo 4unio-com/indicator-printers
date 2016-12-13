@@ -32,7 +32,7 @@ add_subdirectory(src)
 add_subdirectory(tests)
 
 ### Enable coverage reporting
-include(EnableCoverageReport)
+find_package(CoverageReport)
 ENABLE_COVERAGE_REPORT(
   TARGETS ${SERVICE_LIB_NAME} ${SERVICE_EXEC_NAME}
   TESTS test-utils
