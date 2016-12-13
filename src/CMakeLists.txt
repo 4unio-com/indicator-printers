@@ -13,6 +13,8 @@ link_directories(
 )
 
 add_library(${SERVICE_LIB_NAME} STATIC
+  job.h
+  printer.h
   utils.cpp
   utils.h
 )
