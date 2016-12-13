@@ -2,26 +2,22 @@ Source: indicator-printers
 Section: gnome
 Priority: extra
 Maintainer: Ubuntu Desktop Team <ubuntu-desktop@lists.ubuntu.com>
-XSBC-Original-Maintainer: Lars Uebernickel <lars.uebernickel@canonical.com>
-Build-Depends: debhelper (>= 9),
-               autotools-dev,
-               dh-autoreconf,
-               gnome-common,
-               python,
-               libglib2.0-dev (>= 2.43.2),
-               libgtk-3-dev,
-               libdbusmenu-glib-dev (>= 0.5.90),
-               libdbusmenu-gtk3-dev (>= 0.5.90),
-               libindicator3-dev (>= 0.3.91),
-               libcups2-dev,
-               systemd,
-Standards-Version: 3.9.2
+Build-Depends:
+ cmake,
+ cmake-extras (>= 0.10)
+ debhelper (>= 9),
+ dh-translations,
+ googletest | google-mock,
+ intltool,
+ lcov,
+ libcups2-dev,
+ libglib2.0-dev (>= 2.35.4),
+ libproperties-cpp-dev,
+ systemd,
+Standards-Version: 3.9.6
 Homepage: https://launchpad.net/indicator-printers
-# If you aren't a member of ~indicator-applet-developers but need to upload
-# packaging changes, just go ahead.  ~indicator-applet-developers will notice
-# and sync up the code again.
-Vcs-Bzr: https://code.launchpad.net/~indicator-applet-developers/indicator-printers/trunk.13.04
-Vcs-Browser: https://bazaar.launchpad.net/~indicator-applet-developers/indicator-printers/trunk.13.04/files
+Vcs-Bzr: lp:indicator-printers
+X-Ubuntu-Use-Langpack: yes
 
 Package: indicator-printers
 Architecture: any
@@ -30,7 +26,6 @@ Depends: ${shlibs:Depends},
          cups (>= 1.5),
          indicator-common,
 Recommends: indicator-applet (>= 0.2) | indicator-renderer,
-            system-config-printer,
 Description: indicator showing active print jobs
  This indicator is designed to let you view and control active print jobs.
  .
