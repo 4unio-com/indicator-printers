@@ -94,8 +94,6 @@ private:
         auto header = g_menu_item_new(nullptr, detailed_action.c_str());
         g_menu_item_set_attribute(header, "x-canonical-type", "s",
                                   "com.canonical.indicator.root");
-        g_menu_item_set_attribute(header, "submenu-action", "s",
-                                  "indicator.printers-active");
         g_menu_item_set_submenu(header, G_MENU_MODEL(m_submenu));
         g_object_unref(m_submenu);
 
@@ -124,6 +122,15 @@ protected:
         update_header();
     }
 
+    GVariant* get_serialized_icon(const std::string& icon_name)
+    {
+        auto icon = g_themed_icon_new_with_default_fallbacks(icon_name.c_str());
+        auto ret = g_icon_serialize(icon);
+        g_object_unref(icon);
+
+        return ret;
+    }
+
     GVariant* create_header_state()
     {
         const auto title = _("Printers");
@@ -131,7 +138,7 @@ protected:
         GVariantBuilder b;
         g_variant_builder_init(&b, G_VARIANT_TYPE_VARDICT);
         g_variant_builder_add(&b, "{sv}", "title", g_variant_new_string(title));
-        g_variant_builder_add(&b, "{sv}", "icon-name", g_variant_new_string("printer-symbolic"));
+        g_variant_builder_add(&b, "{sv}", "icon", get_serialized_icon("printer-symbolic"));
         g_variant_builder_add(&b, "{sv}", "visible", g_variant_new_boolean(true));
         return g_variant_builder_end(&b);
     }
