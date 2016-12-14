@@ -6,7 +6,7 @@ enable_testing()
 
 ### Set variables for our binary build targets
 set(SERVICE_LIB_NAME "indicator-printers")
-set(SERVICE_EXEC_NAME "indicator-printers-ng")
+set(SERVICE_EXEC_NAME "indicator-printers-service")
 
 ### Some default compile flags
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -g -Wall -Wextra -Werror -fPIC")
@@ -29,6 +29,7 @@ execute_process(COMMAND ${CUPS_CONFIG} --cflags OUTPUT_VARIABLE CUPS_CFLAGS OUTP
 execute_process(COMMAND ${CUPS_CONFIG} --libs OUTPUT_VARIABLE CUPS_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 ### Add sub-directories
+add_subdirectory(data)
 add_subdirectory(src)
 add_subdirectory(tests)
 
