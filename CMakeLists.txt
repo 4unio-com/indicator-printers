@@ -1,6 +1,12 @@
 project(indicator-printers C CXX)
 cmake_minimum_required(VERSION 2.8.9)
 
+### Need to have own copy of gdbuscodegen module
+list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
+### Install path variables
+include (GNUInstallDirs)
+
 ### Always Be Testing
 enable_testing()
 
@@ -9,7 +15,7 @@ set(SERVICE_LIB_NAME "indicator-printers")
 set(SERVICE_EXEC_NAME "indicator-printers-service")
 
 ### Some default compile flags
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -g -Wall -Wextra -Werror -fPIC")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -g -fPIC")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2 -g -Wextra -Wall -Werror -Werror=conversion-null -Wno-ignored-qualifiers -fPIC")
 
 ### Find deps

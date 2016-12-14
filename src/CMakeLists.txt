@@ -12,6 +12,11 @@ link_directories(
   ${SERVICE_DEPS_LIBRARY_DIRS}
 )
 
+include (GdbusCodegen)
+add_gdbus_codegen(SERVICE_GENERATED_SOURCES cups-cupsd-notifier
+                  org.cups.cupsd
+                  ${CMAKE_CURRENT_SOURCE_DIR}/org.cups.cupsd.Notifier.xml)
+
 add_library(${SERVICE_LIB_NAME} STATIC
   actions-live.cpp
   actions-live.h
@@ -25,6 +30,7 @@ add_library(${SERVICE_LIB_NAME} STATIC
   printer.h
   utils.cpp
   utils.h
+  ${SERVICE_GENERATED_SOURCES}
 )
 
 target_link_libraries(${SERVICE_LIB_NAME}
@@ -46,7 +52,7 @@ target_link_libraries(${SERVICE_EXEC_NAME}
 )
 
 install(
-  TARGETS ${SERVICE_EXEC}
+  TARGETS ${SERVICE_EXEC_NAME}
   RUNTIME
-  DESTINATION ${CMAKE_INSTALL_FULL_PKGLIBEXECDIR}
+  DESTINATION ${CMAKE_INSTALL_FULL_LIBDIR}/${PROJECT_NAME}
 )
