@@ -1,4 +1,4 @@
-project(indicator-transfer C CXX)
+project(indicator-printers C CXX)
 cmake_minimum_required(VERSION 2.8.9)
 
 ### Always Be Testing
@@ -18,8 +18,9 @@ find_package(Intltool REQUIRED)
 find_package(Threads)
 
 pkg_check_modules(SERVICE_DEPS REQUIRED
-  glib-2.0>=2.36
   gio-unix-2.0>=2.36
+  glib-2.0>=2.36
+  properties-cpp
 )
 
 ### Find libcups

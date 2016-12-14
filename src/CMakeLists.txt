@@ -13,6 +13,14 @@ link_directories(
 )
 
 add_library(${SERVICE_LIB_NAME} STATIC
+  actions-live.cpp
+  actions-live.h
+  actions.cpp
+  actions.h
+  exporter.cpp
+  exporter.h
+  menu.cpp
+  menu.h
   job.h
   printer.h
   utils.cpp

@@ -14,6 +14,8 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "actions-live.h"
+#include "exporter.h"
 #include "utils.h"
 
 #include <glib/gi18n.h>
@@ -36,6 +38,22 @@ int main() {
 
     // set up us the machine
     auto loop = g_main_loop_new(nullptr, false);
+
+    // create the menus
+    auto actions = std::make_shared<LiveActions>();
+    MenuFactory factory(actions);
+    std::vector<std::shared_ptr<Menu>> menus;
+    for(int i = 0, n = Menu::NUM_PROFILES; i < n; i++) {
+        menus.push_back(factory.buildMenu(Menu::Profile(i)));
+    }
+
+    // export them & run until we lose the busname
+    Exporter exporter;
+    exporter.name_lost().connect([loop](){
+        g_message("%s exiting; failed/lost bus ownership", GETTEXT_PACKAGE);
+        g_main_loop_quit(loop);
+    });
+    exporter.publish(actions, menus);
 
     g_main_loop_run(loop);
 
