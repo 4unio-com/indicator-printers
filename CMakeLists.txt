@@ -43,6 +43,6 @@ add_subdirectory(tests)
 find_package(CoverageReport)
 ENABLE_COVERAGE_REPORT(
   TARGETS ${SERVICE_LIB_NAME} ${SERVICE_EXEC_NAME}
-  TESTS test-utils
+  TESTS test-libindicator-printers
   FILTER /usr/include ${CMAKE_BINARY_DIR}/*
 )

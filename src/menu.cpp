@@ -227,7 +227,6 @@ MenuFactory::buildMenu(Menu::Profile profile)
         break;
 
     default:
-        g_warn_if_reached();
         break;
     }
 
