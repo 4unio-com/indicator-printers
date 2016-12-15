@@ -6,6 +6,7 @@ add_definitions(
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}
   ${SERVICE_DEPS_INCLUDE_DIRS}
 )
 link_directories(
@@ -22,6 +23,8 @@ add_library(${SERVICE_LIB_NAME} STATIC
   actions-live.h
   actions.cpp
   actions.h
+  cups-client.cpp
+  cups-client.h
   exporter.cpp
   exporter.h
   menu.cpp

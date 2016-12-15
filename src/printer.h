@@ -14,10 +14,9 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "job.h"
+#pragma once
 
 #include <string>
-#include <vector>
 
 namespace unity {
 namespace indicator {
@@ -37,8 +36,6 @@ namespace printers {
         std::string uri;
         std::string state_reasons;
         bool accepting_jobs;
-
-        std::vector<Job> jobs;
     };
 
 } // printers

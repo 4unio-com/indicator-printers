@@ -14,6 +14,11 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma once
+
+#include "printer.h"
+
+#include <string>
 
 namespace unity {
 namespace indicator {
@@ -30,12 +35,14 @@ namespace printers {
             ABORTED,
             COMPLETED
         } State;
-        State state = QUEUED;
+        State state = PENDING;
 
         unsigned int id;
         std::string name;
         std::string state_reasons;
         unsigned int impressions_completed;
+
+        Printer printer;
     };
 
 } // printers
