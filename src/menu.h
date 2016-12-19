@@ -17,6 +17,7 @@
 #pragma once
 
 #include "actions.h"
+#include "cups-client.h"
 
 #include <memory> // std::shared_ptr
 #include <vector>
@@ -64,11 +65,13 @@ private:
 class MenuFactory
 {
 public:
-    MenuFactory (const std::shared_ptr<Actions>& actions);
+    MenuFactory (const std::shared_ptr<Actions>& actions,
+                 const std::shared_ptr<CupsClient>& client);
     std::shared_ptr<Menu> buildMenu(Menu::Profile profile);
 
 private:
     std::shared_ptr<Actions> m_actions;
+    std::shared_ptr<CupsClient> m_client;
 };
 
 } // namespace printers

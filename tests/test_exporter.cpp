@@ -15,6 +15,7 @@
  */
 
 #include "actions-mock.h"
+#include "client-mock.h"
 #include "glib-fixture.h"
 
 #include "exporter.h"
@@ -65,9 +66,10 @@ protected:
 TEST_F(ExporterFixture, Publish)
 {
     auto actions = std::make_shared<MockActions>();
+    auto client = std::make_shared<MockClient>();
     std::vector<std::shared_ptr<Menu>> menus;
 
-    MenuFactory menu_factory (actions);
+    MenuFactory menu_factory (actions, client);
     for(int i = 0; i < Menu::NUM_PROFILES; i++) {
       auto menu = menu_factory.buildMenu(Menu::Profile(i));
       menus.push_back(menu);

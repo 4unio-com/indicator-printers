@@ -15,6 +15,7 @@ add_executable(test-libindicator-printers
 target_link_libraries(test-libindicator-printers
   ${SERVICE_LIB_NAME}
   ${SERVICE_DEPS_LIBRARIES}
+  ${CUPS_LIBS}
 
   ${GTEST_LIBRARIES}
   ${GMOCK_LIBRARIES}

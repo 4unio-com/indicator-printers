@@ -37,10 +37,10 @@ namespace printers {
         virtual ~CupsClient();
 
         // Signals corresponding to printers
-        core::Signal<>& printer_state_changed(const Printer& printer);
+        core::Signal<const Printer&>& printer_state_changed();
 
         // Signals corresponding to jobs
-        core::Signal<>& job_state_changed(const Job& job);
+        core::Signal<const Job&>& job_state_changed();
 
         // Methods to manage notification monitoring
         virtual void create_subscription();

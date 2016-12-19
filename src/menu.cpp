@@ -198,8 +198,10 @@ public:
 *****
 ****/
 
-MenuFactory::MenuFactory(const std::shared_ptr<Actions>& actions_):
-    m_actions(actions_)
+MenuFactory::MenuFactory(const std::shared_ptr<Actions>& actions_,
+                         const std::shared_ptr<CupsClient>& client_):
+    m_actions(actions_),
+    m_client(client_)
 {
 }
 

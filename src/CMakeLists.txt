@@ -37,7 +37,7 @@ add_library(${SERVICE_LIB_NAME} STATIC
 )
 
 target_link_libraries(${SERVICE_LIB_NAME}
-  ${SERVICE_DEPS_LIBS}
+  ${SERVICE_DEPS_LIBRARIES}
   ${CUPS_LIBS}
 )
 

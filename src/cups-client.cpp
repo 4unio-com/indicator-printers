@@ -61,8 +61,15 @@ public:
     }
 
     // Signals to propagate
-    core::Signal<>& printer_state_changed(const Printer& printer);
-    core::Signal<>& job_state_changed(const Job& job);
+    core::Signal<const Printer&>& printer_state_changed()
+    {
+        return m_printer_state_changed;
+    }
+
+    core::Signal<const Job&>& job_state_changed()
+    {
+        return m_job_state_changed;
+    }
 
     void create_subscription()
     {
@@ -189,7 +196,7 @@ private:
         job.state_reasons = job_state_reasons;
         job.impressions_completed = job_impressions_completed;
 
-        static_cast<Impl*>(gthis)->job_state_changed(job);
+        static_cast<Impl*>(gthis)->m_job_state_changed(job);
     }
 
     static void on_printer_state_changed(Notifier*,
@@ -208,11 +215,13 @@ private:
         printer.uri = uri;
         printer.state_reasons = state_reasons;
         printer.accepting_jobs = is_accepting_jobs;
-        static_cast<Impl*>(gthis)->printer_state_changed(printer);
+        static_cast<Impl*>(gthis)->m_printer_state_changed(printer);
     }
 
     int m_subscription_id;
     Notifier* m_notifier_proxy;
+    core::Signal<const Printer&> m_printer_state_changed;
+    core::Signal<const Job&> m_job_state_changed;
 };
 
 CupsClient::CupsClient() :
@@ -224,14 +233,14 @@ CupsClient::~CupsClient()
 {
 }
 
-core::Signal<>& CupsClient::printer_state_changed(const Printer& printer)
+core::Signal<const Printer&>& CupsClient::printer_state_changed()
 {
-    return p->printer_state_changed(printer);
+    return p->printer_state_changed();
 }
 
-core::Signal<>& CupsClient::job_state_changed(const Job& job)
+core::Signal<const Job&>& CupsClient::job_state_changed()
 {
-    return p->job_state_changed(job);
+    return p->job_state_changed();
 }
 
 void CupsClient::create_subscription()

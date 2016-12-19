@@ -15,7 +15,9 @@
  */
 
 #include "actions-live.h"
+#include "cups-client.h"
 #include "exporter.h"
+#include "menu.h"
 #include "utils.h"
 
 #include <glib/gi18n.h>
@@ -41,7 +43,8 @@ int main() {
 
     // create the menus
     auto actions = std::make_shared<LiveActions>();
-    MenuFactory factory(actions);
+    auto client = std::make_shared<CupsClient>();
+    MenuFactory factory(actions, client);
     std::vector<std::shared_ptr<Menu>> menus;
     for(int i = 0, n = Menu::NUM_PROFILES; i < n; i++) {
         menus.push_back(factory.buildMenu(Menu::Profile(i)));
