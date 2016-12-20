@@ -67,17 +67,9 @@ TEST_F(ExporterFixture, Publish)
 {
     auto actions = std::make_shared<MockActions>();
     auto client = std::make_shared<MockClient>();
-    std::vector<std::shared_ptr<Menu>> menus;
-
-    MenuFactory menu_factory (actions, client);
-    for(int i = 0; i < Menu::NUM_PROFILES; i++) {
-      auto menu = menu_factory.buildMenu(Menu::Profile(i));
-      menus.push_back(menu);
-      EXPECT_EQ(Menu::Profile(i), menu->profile());
-    }
 
     Exporter exporter;
-    exporter.publish(actions, menus);
+    exporter.publish(actions, client);
     wait_msec();
 
     auto connection = g_bus_get_sync (G_BUS_TYPE_SESSION, nullptr, nullptr);

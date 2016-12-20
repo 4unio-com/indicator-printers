@@ -37,41 +37,24 @@ namespace printers {
 class Menu
 {
 public:
-    enum Profile { Desktop, DesktopGreeter, Phone, PhoneGreeter, NUM_PROFILES };
-    const std::string& name() const;
-    Profile profile() const;
+    enum Profile {
+        Desktop,
+        DesktopGreeter,
+        Phone,
+        PhoneGreeter,
+        NUM_PROFILES
+    };
+    Menu(const std::shared_ptr<Actions>& actions,
+         const std::shared_ptr<CupsClient>& client);
+    virtual ~Menu() = default;
+
     GMenuModel* menu_model();
 
-protected:
-    Menu (Profile profile_in, const std::string& name_in);
-    virtual ~Menu() = default;
-    GMenu* m_menu = nullptr;
+    static std::string profile_name(Profile profile);
 
 private:
-    const Profile m_profile;
-    const std::string m_name;
-
-    // we've got raw pointers in here, so disable copying
-    Menu(const Menu&) = delete;
-    Menu& operator=(const Menu&) = delete;
-};
-
-/**
- * \brief Builds a Menu for a given state and profile
- *
- * @see Menu
- * @see Exporter
- */
-class MenuFactory
-{
-public:
-    MenuFactory (const std::shared_ptr<Actions>& actions,
-                 const std::shared_ptr<CupsClient>& client);
-    std::shared_ptr<Menu> buildMenu(Menu::Profile profile);
-
-private:
-    std::shared_ptr<Actions> m_actions;
-    std::shared_ptr<CupsClient> m_client;
+    class Impl;
+    std::unique_ptr<Impl> p;
 };
 
 } // namespace printers

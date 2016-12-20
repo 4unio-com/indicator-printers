@@ -17,7 +17,6 @@
 #include "actions-live.h"
 #include "cups-client.h"
 #include "exporter.h"
-#include "menu.h"
 #include "utils.h"
 
 #include <glib/gi18n.h>
@@ -44,11 +43,6 @@ int main() {
     // create the menus
     auto actions = std::make_shared<LiveActions>();
     auto client = std::make_shared<CupsClient>();
-    MenuFactory factory(actions, client);
-    std::vector<std::shared_ptr<Menu>> menus;
-    for(int i = 0, n = Menu::NUM_PROFILES; i < n; i++) {
-        menus.push_back(factory.buildMenu(Menu::Profile(i)));
-    }
 
     // export them & run until we lose the busname
     Exporter exporter;
@@ -56,7 +50,7 @@ int main() {
         g_message("%s exiting; failed/lost bus ownership", GETTEXT_PACKAGE);
         g_main_loop_quit(loop);
     });
-    exporter.publish(actions, menus);
+    exporter.publish(actions, client);
 
     g_main_loop_run(loop);
 

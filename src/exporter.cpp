@@ -53,10 +53,10 @@ public:
     core::Signal<> name_lost;
 
     void publish(const std::shared_ptr<Actions>& actions,
-                 const std::vector<std::shared_ptr<Menu>>& menus)
+                 const std::shared_ptr<CupsClient>& client)
     {
         m_actions = actions;
-        m_menus = menus;
+        m_menu = new Menu(actions, client);
         m_own_id = g_bus_own_name(G_BUS_TYPE_SESSION,
                                   INDICATOR_BUS_NAME,
                                   G_BUS_NAME_OWNER_FLAGS_ALLOW_REPLACEMENT,
@@ -97,19 +97,19 @@ private:
         }
 
         // export the menus
-        for(auto& menu : m_menus)
-        {
-            const auto path = std::string(INDICATOR_BUS_PATH) + "/" + menu->name();
+        for(int i = 0, n = Menu::NUM_PROFILES; i < n; i++) {
+            const auto profile_name = Menu::profile_name(static_cast<Menu::Profile>(i));
+            const auto path = std::string(INDICATOR_BUS_PATH) + "/" + profile_name;
             const auto id = g_dbus_connection_export_menu_model(m_bus,
                                                                 path.c_str(),
-                                                                menu->menu_model(),
+                                                                m_menu->menu_model(),
                                                                 &error);
             if (id) {
                 m_exported_menu_ids.insert(id);
             } else {
                 if (error != nullptr) {
                     g_warning("cannot export %s menu: %s",
-                              menu->name().c_str(), error->message);
+                              profile_name.c_str(), error->message);
                 }
                 g_clear_error(&error);
             }
@@ -129,7 +129,7 @@ private:
     guint m_exported_actions_id = 0;
     GDBusConnection* m_bus = nullptr;
     std::shared_ptr<Actions> m_actions;
-    std::vector<std::shared_ptr<Menu>> m_menus;
+    Menu* m_menu;
 };
 
 
@@ -150,9 +150,9 @@ core::Signal<>& Exporter::name_lost()
 }
 
 void Exporter::publish(const std::shared_ptr<Actions>& actions,
-                       const std::vector<std::shared_ptr<Menu>>& menus)
+                       const std::shared_ptr<CupsClient>& client)
 {
-    p->publish(actions, menus);
+    p->publish(actions, client);
 }
 
 

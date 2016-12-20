@@ -17,6 +17,7 @@
 #pragma once
 
 #include "actions.h"
+#include "cups-client.h"
 #include "menu.h"
 
 #include <core/signal.h>
@@ -32,7 +33,7 @@ namespace printers {
 #define INDICATOR_BUS_PATH "/com/canonical/indicator/printers"
 
 /**
- * \brief Exports actions and menus to DBus. 
+ * \brief Exports actions and menu to DBus. 
  */
 class Exporter
 {
@@ -43,7 +44,7 @@ public:
     core::Signal<>& name_lost();
 
     void publish(const std::shared_ptr<Actions>& actions,
-                 const std::vector<std::shared_ptr<Menu>>& menus);
+                 const std::shared_ptr<CupsClient>& client);
 
 private:
     class Impl;
