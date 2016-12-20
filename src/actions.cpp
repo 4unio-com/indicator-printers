@@ -53,19 +53,7 @@ Actions::Actions():
     // add the header actions
     auto gam = G_ACTION_MAP(m_actions);
     auto v = create_default_header_state();
-    auto a = g_simple_action_new_stateful("desktop-header", nullptr, v);
-    g_action_map_add_action(gam, G_ACTION(a));
-    g_object_unref(a);
-
-    a = g_simple_action_new_stateful("desktop_greeter-header", nullptr, v);
-    g_action_map_add_action(gam, G_ACTION(a));
-    g_object_unref(a);
-
-    a = g_simple_action_new_stateful("phone-header", nullptr, v);
-    g_action_map_add_action(gam, G_ACTION(a));
-    g_object_unref(a);
-
-    a = g_simple_action_new_stateful("phone_greeter-header", nullptr, v);
+    auto a = g_simple_action_new_stateful("printers", nullptr, v);
     g_action_map_add_action(gam, G_ACTION(a));
     g_object_unref(a);
 }
