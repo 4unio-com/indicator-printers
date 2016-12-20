@@ -51,7 +51,7 @@ public:
                          "signal::job-created", on_job_changed, this,
                          "signal::job-state", on_job_changed, this,
                          "signal::job-completed", on_job_changed, this,
-                         "signal::printer-state_changed", on_printer_state_changed, this,
+                         "signal::printer-state-changed", on_printer_state_changed, this,
                          nullptr);
     }
 

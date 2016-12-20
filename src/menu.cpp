@@ -48,7 +48,7 @@ public:
     void update_header()
     {
         auto action_group = m_actions->action_group();
-        std::string action_name{ "phone-header"};
+        std::string action_name{ "indicator.printers.root"};
         auto state = create_header_state();
         g_action_group_change_action_state(action_group, action_name.c_str(), state);
     }
@@ -93,8 +93,10 @@ private:
         m_submenu = g_menu_new();
 
         // add submenu to the header
-        const std::string detailed_action{"indicator.printers-header"};
+        const std::string detailed_action{"indicator.printers.root"};
         auto header = g_menu_item_new(nullptr, detailed_action.c_str());
+        g_menu_item_set_attribute(header, "action-namespace", "s",
+                                  "indicator.printers");
         g_menu_item_set_attribute(header, "x-canonical-type", "s",
                                   "com.canonical.indicator.root");
         g_menu_item_set_submenu(header, G_MENU_MODEL(m_submenu));
