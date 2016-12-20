@@ -90,10 +90,7 @@ TEST_F(ExporterFixture, Publish)
     }
 
     // confirm the actions that we expect
-    EXPECT_EQ(1, names.count("desktop_greeter-header"));
-    EXPECT_EQ(1, names.count("desktop-header"));
-    EXPECT_EQ(1, names.count("phone_greeter-header"));
-    EXPECT_EQ(1, names.count("phone-header"));
+    EXPECT_EQ(1, names.count("printers"));
 
     // try closing the connection prematurely
     // to test Exporter's name-lost signal
