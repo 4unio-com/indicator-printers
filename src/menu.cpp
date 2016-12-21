@@ -48,7 +48,7 @@ public:
     void update_header()
     {
         auto action_group = m_actions->action_group();
-        std::string action_name{ "indicator.printers"};
+        std::string action_name{ "printers"};
         auto state = create_header_state();
         g_action_group_change_action_state(action_group, action_name.c_str(), state);
     }
