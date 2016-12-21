@@ -38,6 +38,7 @@ public:
     {
         // initialize the menu
         create_gmenu();
+        update_header();
     }
 
     virtual ~Impl()
@@ -95,8 +96,6 @@ private:
         // add submenu to the header
         const std::string detailed_action{"indicator.printers"};
         auto header = g_menu_item_new(nullptr, detailed_action.c_str());
-        g_menu_item_set_attribute(header, "action-namespace", "s",
-                                  "indicator");
         g_menu_item_set_attribute(header, "x-canonical-type", "s",
                                   "com.canonical.indicator.root");
         g_menu_item_set_submenu(header, G_MENU_MODEL(m_submenu));
@@ -116,7 +115,6 @@ Menu::Menu(const std::shared_ptr<Actions>& actions,
            const std::shared_ptr<CupsClient>& client):
     p(new Impl(actions, client))
 {
-    p->update_header();
 }
 
 GMenuModel* Menu::menu_model()
