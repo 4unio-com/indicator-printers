@@ -56,7 +56,8 @@ public:
                  const std::shared_ptr<CupsClient>& client)
     {
         m_actions = actions;
-        m_menu = new Menu(actions, client);
+        m_client = client;
+        m_menu = new Menu(m_actions, m_client);
         m_own_id = g_bus_own_name(G_BUS_TYPE_SESSION,
                                   INDICATOR_BUS_NAME,
                                   G_BUS_NAME_OWNER_FLAGS_ALLOW_REPLACEMENT,
@@ -114,6 +115,7 @@ private:
                 g_clear_error(&error);
             }
         }
+        m_client->refresh();
     }
 
     static void on_name_lost(GDBusConnection*, const gchar* name,
@@ -129,6 +131,7 @@ private:
     guint m_exported_actions_id = 0;
     GDBusConnection* m_bus = nullptr;
     std::shared_ptr<Actions> m_actions;
+    std::shared_ptr<CupsClient> m_client;
     Menu* m_menu;
 };
 

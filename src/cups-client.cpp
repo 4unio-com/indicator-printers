@@ -159,6 +159,34 @@ public:
         ippDelete (resp);
     }
 
+    void refresh()
+    {
+        int num_dests, num_jobs;
+        cups_dest_t* dests;
+        cups_job_t* jobs;
+
+        num_dests = cupsGetDests(&dests);
+        for (int i = 0; i < num_dests; i++) {
+            Printer printer;
+            printer.name = dests[i].name;
+
+            num_jobs = cupsGetJobs(&jobs, dests[i].name,
+                                   true, CUPS_WHICHJOBS_ACTIVE);
+            for (int j = 0; j < num_jobs; j++) {
+                Job job;
+                job.id = jobs[i].id;
+                job.state = static_cast<Job::State>(jobs[i].state);
+                job.name = jobs[i].title;
+
+                job.printer = printer;
+
+                m_job_state_changed(job);
+            }
+            cupsFreeJobs(num_jobs, jobs);
+        }
+        cupsFreeDests(num_dests, dests);
+    }
+
 private:
     static gboolean on_subscription_timeout(gpointer gthis)
     {
@@ -256,6 +284,11 @@ void CupsClient::renew_subscription()
 void CupsClient::cancel_subscription()
 {
     p->cancel_subscription();
+}
+
+void CupsClient::refresh()
+{
+    p->refresh();
 }
 
 } // printers

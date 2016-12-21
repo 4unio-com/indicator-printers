@@ -47,6 +47,9 @@ namespace printers {
         virtual void renew_subscription();
         virtual void cancel_subscription();
 
+        // To iniitalize the indicator with current jobs
+        virtual void refresh();
+
     private:
         class Impl;
         std::unique_ptr<Impl> p;

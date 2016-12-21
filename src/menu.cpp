@@ -39,6 +39,11 @@ public:
         // initialize the menu
         create_gmenu();
         update_header();
+
+        m_client->job_state_changed().connect([this](const Job& job) {
+                g_debug("State changed for job '%s` on printer '%s'",
+                        job.name.c_str(), job.printer.name.c_str());
+            });
     }
 
     virtual ~Impl()
