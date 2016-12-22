@@ -41,7 +41,8 @@ public:
         update_header();
 
         m_client->job_state_changed().connect([this](const Job& job) {
-                g_debug("State changed for job '%s` on printer '%s'",
+                g_debug("State changed for job %u '%s` on printer '%s'",
+                        job.id,
                         job.name.c_str(), job.printer.name.c_str());
             });
     }

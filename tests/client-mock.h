@@ -33,6 +33,7 @@ namespace printers {
         MOCK_METHOD0(create_subscription, void());
         MOCK_METHOD0(renew_subscription, void());
         MOCK_METHOD0(cancel_subscription, void());
+        MOCK_METHOD0(refresh, void());
     };
 
 } // printers

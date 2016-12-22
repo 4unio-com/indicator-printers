@@ -115,6 +115,7 @@ private:
                 g_clear_error(&error);
             }
         }
+        m_client->create_subscription();
         m_client->refresh();
     }
 
