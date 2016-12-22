@@ -32,6 +32,7 @@ namespace printers {
         State state = IDLE;
 
         std::string name;
+        std::string description;
         std::string text;
         std::string uri;
         std::string state_reasons;

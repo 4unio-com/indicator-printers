@@ -167,16 +167,14 @@ public:
 
         num_dests = cupsGetDests(&dests);
         for (int i = 0; i < num_dests; i++) {
-            Printer printer;
-            printer.name = dests[i].name;
-
+            auto printer = get_printer_info(dests[i].name);
             num_jobs = cupsGetJobs(&jobs, dests[i].name,
                                    true, CUPS_WHICHJOBS_ACTIVE);
             for (int j = 0; j < num_jobs; j++) {
                 Job job;
-                job.id = jobs[i].id;
-                job.state = static_cast<Job::State>(jobs[i].state);
-                job.name = jobs[i].title;
+                job.id = jobs[j].id;
+                job.state = static_cast<Job::State>(jobs[j].state);
+                job.name = jobs[j].title;
 
                 job.printer = printer;
 
@@ -188,6 +186,31 @@ public:
     }
 
 private:
+    // Method to get Printer object from the name
+    Printer get_printer_info(const std::string& name)
+    {
+        int num_dests;
+        cups_dest_t* dests;
+        cups_dest_t* our_dest;
+        Printer printer;
+        printer.name = name;
+
+        num_dests = cupsGetDests(&dests);
+        our_dest = cupsGetDest(name.c_str(), nullptr,
+                               num_dests, dests);
+        
+        // Get the printer's description
+        auto description = cupsGetOption("printer-info",
+                                         our_dest->num_options,
+                                         our_dest->options);
+        if (description != nullptr) {
+            printer.description = description;
+        }
+
+        cupsFreeDests(num_dests, dests);
+        return printer;
+    }
+ 
     static gboolean on_subscription_timeout(gpointer gthis)
     {
         static_cast<Impl*>(gthis)->renew_subscription();
@@ -208,9 +231,10 @@ private:
             unsigned int job_impressions_completed,
             gpointer gthis)
     {
-        Printer printer;
+        auto self = static_cast<Impl*>(gthis);
+
+        auto printer = self->get_printer_info(printer_name);
         printer.state = static_cast<Printer::State>(printer_state);
-        printer.name = printer_name;
         printer.text = printer_text;
         printer.uri = printer_uri;
         printer.state_reasons = printer_state_reasons;
@@ -224,7 +248,7 @@ private:
         job.state_reasons = job_state_reasons;
         job.impressions_completed = job_impressions_completed;
 
-        static_cast<Impl*>(gthis)->m_job_state_changed(job);
+        self->m_job_state_changed(job);
     }
 
     static void on_printer_state_changed(Notifier*,
@@ -236,14 +260,15 @@ private:
                                          bool is_accepting_jobs,
                                          gpointer gthis)
     {
-        Printer printer;
+        auto self = static_cast<Impl*>(gthis);
+
+        auto printer = self->get_printer_info(name);
         printer.state = static_cast<Printer::State>(state);
-        printer.name = name;
         printer.text = text;
         printer.uri = uri;
         printer.state_reasons = state_reasons;
         printer.accepting_jobs = is_accepting_jobs;
-        static_cast<Impl*>(gthis)->m_printer_state_changed(printer);
+        self->m_printer_state_changed(printer);
     }
 
     int m_subscription_id;

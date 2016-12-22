@@ -31,6 +31,14 @@ namespace printers {
 class Menu::Impl
 {
 public:
+
+    enum Section {
+        CURRENT,
+        QUEUED,
+        PAUSED,
+        NUM_SECTIONS
+    };
+
     Impl(const std::shared_ptr<Actions>& actions,
          const std::shared_ptr<CupsClient>& client):
         m_actions(actions),
@@ -41,9 +49,25 @@ public:
         update_header();
 
         m_client->job_state_changed().connect([this](const Job& job) {
+                const auto printer = job.printer;
                 g_debug("State changed for job %u '%s` on printer '%s'",
                         job.id,
-                        job.name.c_str(), job.printer.name.c_str());
+                        job.name.c_str(),
+                        printer.description.empty() ? printer.name.c_str() : printer.description.c_str());
+
+                switch (job.state) {
+                case Job::State::PENDING:
+                    break;
+                case Job::State::HELD:
+                    break;
+                case Job::State::PROCESSING:
+                    break;
+                case Job::State::STOPPED:
+                case Job::State::CANCELED:
+                case Job::State::ABORTED:
+                case Job::State::COMPLETED:
+                    break;
+                }
             });
     }
 
@@ -57,7 +81,9 @@ public:
         auto action_group = m_actions->action_group();
         std::string action_name{ "printers"};
         auto state = create_header_state();
-        g_action_group_change_action_state(action_group, action_name.c_str(), state);
+        g_action_group_change_action_state(action_group,
+                                           action_name.c_str(),
+                                           state);
     }
 
     GVariant* get_serialized_icon(const std::string& icon_name)
@@ -97,7 +123,13 @@ private:
     {
         g_assert(m_submenu == nullptr);
 
+        // build the submenu
         m_submenu = g_menu_new();
+        for(int i = 0; i < NUM_SECTIONS; i++) {
+            auto section = g_menu_new();
+            g_menu_append_section(m_submenu, nullptr, G_MENU_MODEL(section));
+            g_object_unref(section);
+        }
 
         // add submenu to the header
         const std::string detailed_action{"indicator.printers"};
