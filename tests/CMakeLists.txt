@@ -10,6 +10,7 @@ link_directories(
 
 add_executable(test-libindicator-printers
   test_exporter.cpp
+  test_menu.cpp
   test_utils.cpp
 )
 target_link_libraries(test-libindicator-printers
