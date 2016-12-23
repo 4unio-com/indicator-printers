@@ -16,48 +16,39 @@
 
 #pragma once
 
-#include "client.h"
 #include "job.h"
 #include "printer.h"
 
 #include <core/signal.h>
 
-#include <memory>
 
 namespace unity {
 namespace indicator {
 namespace printers {
 
-#define CUPS_DBUS_NAME "org.cups.cupsd.Notifier"
-#define CUPS_DBUS_PATH "/org/cups/cupsd/Notifier"
-#define CUPS_DBUS_INTERFACE "org.cups.cupsd.Notifier"
-
-    class CupsClient : public Client {
+    class Client {
     public:
-        explicit CupsClient();
-        virtual ~CupsClient();
+        explicit Client() = default;
+        virtual ~Client() = default;
 
         // Signals corresponding to printers
-        core::Signal<const Printer&>& printer_state_changed();
+        virtual core::Signal<const Printer&>& printer_state_changed() = 0;
 
         // Signals corresponding to jobs
-        core::Signal<const Job&>& job_state_changed();
+        virtual core::Signal<const Job&>& job_state_changed() = 0;
 
         // Methods to manage notification monitoring
-        virtual void create_subscription();
-        virtual void renew_subscription();
-        virtual void cancel_subscription();
+        virtual void create_subscription() = 0;
+        virtual void renew_subscription() = 0;
+        virtual void cancel_subscription() = 0;
 
         // To iniitalize the indicator with current jobs
-        virtual void refresh();
+        virtual void refresh() = 0;
 
     private:
-        class Impl;
-        std::unique_ptr<Impl> p;
-
         // disable copying 
-        CupsClient(const CupsClient&) = delete; 
-        CupsClient& operator=(const CupsClient&) = delete; 
+        Client(const Client&) = delete; 
+        Client& operator=(const Client&) = delete; 
     };
 
 } // printers

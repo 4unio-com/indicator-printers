@@ -17,7 +17,7 @@
 #pragma once
 
 #include "actions.h"
-#include "cups-client.h"
+#include "client.h"
 
 #include <memory> // std::shared_ptr
 #include <vector>
@@ -45,7 +45,7 @@ public:
         NUM_PROFILES
     };
     Menu(const std::shared_ptr<Actions>& actions,
-         const std::shared_ptr<CupsClient>& client);
+         const std::shared_ptr<Client>& client);
     virtual ~Menu() = default;
 
     GMenuModel* menu_model();

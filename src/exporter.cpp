@@ -53,7 +53,7 @@ public:
     core::Signal<> name_lost;
 
     void publish(const std::shared_ptr<Actions>& actions,
-                 const std::shared_ptr<CupsClient>& client)
+                 const std::shared_ptr<Client>& client)
     {
         m_actions = actions;
         m_client = client;
@@ -132,7 +132,7 @@ private:
     guint m_exported_actions_id = 0;
     GDBusConnection* m_bus = nullptr;
     std::shared_ptr<Actions> m_actions;
-    std::shared_ptr<CupsClient> m_client;
+    std::shared_ptr<Client> m_client;
     Menu* m_menu;
 };
 
@@ -154,7 +154,7 @@ core::Signal<>& Exporter::name_lost()
 }
 
 void Exporter::publish(const std::shared_ptr<Actions>& actions,
-                       const std::shared_ptr<CupsClient>& client)
+                       const std::shared_ptr<Client>& client)
 {
     p->publish(actions, client);
 }

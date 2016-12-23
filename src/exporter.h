@@ -17,7 +17,7 @@
 #pragma once
 
 #include "actions.h"
-#include "cups-client.h"
+#include "client.h"
 #include "menu.h"
 
 #include <core/signal.h>
@@ -44,7 +44,7 @@ public:
     core::Signal<>& name_lost();
 
     void publish(const std::shared_ptr<Actions>& actions,
-                 const std::shared_ptr<CupsClient>& client);
+                 const std::shared_ptr<Client>& client);
 
 private:
     class Impl;

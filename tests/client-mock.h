@@ -16,24 +16,37 @@
 
 #pragma once
 
-#include "cups-client.h"
+#include "client.h"
 
+#include <core/signal.h>
 #include <gmock/gmock.h>
 
 namespace unity {
 namespace indicator {
 namespace printers {
 
-    class MockClient: public CupsClient
+    class MockClient: public Client
     {
     public:
-        explicit MockClient(): CupsClient() {}
+        explicit MockClient(): Client() {}
         ~MockClient() = default;
+
+        core::Signal<const Printer&>& printer_state_changed()
+        {
+            return m_printer_state_changed;
+        }
+        core::Signal<const Job&>& job_state_changed()
+        {
+            return m_job_state_changed;
+        }
 
         MOCK_METHOD0(create_subscription, void());
         MOCK_METHOD0(renew_subscription, void());
         MOCK_METHOD0(cancel_subscription, void());
         MOCK_METHOD0(refresh, void());
+
+        core::Signal<const Printer&> m_printer_state_changed;
+        core::Signal<const Job&> m_job_state_changed;
     };
 
 } // printers

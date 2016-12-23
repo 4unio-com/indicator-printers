@@ -40,7 +40,7 @@ public:
     };
 
     Impl(const std::shared_ptr<Actions>& actions,
-         const std::shared_ptr<CupsClient>& client):
+         const std::shared_ptr<Client>& client):
         m_actions(actions),
         m_client(client)
     {
@@ -114,7 +114,7 @@ public:
 
 private:
     std::shared_ptr<Actions> m_actions;
-    std::shared_ptr<CupsClient> m_client;
+    std::shared_ptr<Client> m_client;
 
     GMenu* m_submenu = nullptr;
     GMenu* m_menu = nullptr;
@@ -150,7 +150,7 @@ private:
 
 
 Menu::Menu(const std::shared_ptr<Actions>& actions,
-           const std::shared_ptr<CupsClient>& client):
+           const std::shared_ptr<Client>& client):
     p(new Impl(actions, client))
 {
 }

@@ -23,6 +23,7 @@ add_library(${SERVICE_LIB_NAME} STATIC
   actions-live.h
   actions.cpp
   actions.h
+  client.h
   cups-client.cpp
   cups-client.h
   exporter.cpp
