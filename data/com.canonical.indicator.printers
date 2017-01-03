@@ -4,17 +4,17 @@ ObjectPath=/com/canonical/indicator/printers
 Position=90
 
 [desktop]
-ObjectPath=/com/canonical/indicator/printers/desktop
+ObjectPath=/com/canonical/indicator/printers/menu
 
 [desktop_greeter]
-ObjectPath=/com/canonical/indicator/printers/desktop_greeter
+ObjectPath=/com/canonical/indicator/printers/menu
 
 [desktop_lockscreen]
-ObjectPath=/com/canonical/indicator/printers/desktop_greeter
+ObjectPath=/com/canonical/indicator/printers/menu
 
 [phone]
-ObjectPath=/com/canonical/indicator/printers/phone
+ObjectPath=/com/canonical/indicator/printers/menu
 
 [phone_greeter]
-ObjectPath=/com/canonical/indicator/printers/phone_greeter
+ObjectPath=/com/canonical/indicator/printers/menu
 

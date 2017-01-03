@@ -37,20 +37,11 @@ namespace printers {
 class Menu
 {
 public:
-    enum Profile {
-        Desktop,
-        DesktopGreeter,
-        Phone,
-        PhoneGreeter,
-        NUM_PROFILES
-    };
     explicit Menu(const std::shared_ptr<Actions>& actions,
                   const std::shared_ptr<Client>& client);
     virtual ~Menu();
 
     GMenuModel* menu_model();
-
-    static std::string profile_name(Profile profile);
 
 private:
     class Impl;

@@ -164,31 +164,6 @@ GMenuModel* Menu::menu_model()
     return p->menu_model();
 }
 
-std::string Menu::profile_name(Profile profile)
-{
-    switch (profile) {
-    case Menu::Desktop:
-        return "desktop";
-        break;
-
-    case Menu::DesktopGreeter:
-        return "desktop_greeter";
-        break;
-
-    case Menu::Phone:
-        return "phone";
-        break;
-
-    case Menu::PhoneGreeter:
-        return "phone_greeter";
-        break;
-
-    default:
-        break;
-    }
-    return "unknown";
-}
-
 } // namespace printers
 } // namespace indicator
 } // namespace unity

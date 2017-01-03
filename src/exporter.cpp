@@ -33,8 +33,8 @@ public:
     ~Impl()
     {
         if (m_bus != nullptr) {
-            for(auto& id : m_exported_menu_ids) {
-                g_dbus_connection_unexport_menu_model(m_bus, id);
+            if (m_exported_menu_id) {
+                g_dbus_connection_unexport_menu_model(m_bus, m_exported_menu_id);
             }
 
             if (m_exported_actions_id) {
@@ -98,23 +98,16 @@ private:
         }
 
         // export the menus
-        for(int i = 0, n = Menu::NUM_PROFILES; i < n; i++) {
-            const auto profile_name = Menu::profile_name(static_cast<Menu::Profile>(i));
-            const auto path = std::string(INDICATOR_BUS_PATH) + "/" + profile_name;
-            const auto id = g_dbus_connection_export_menu_model(m_bus,
-                                                                path.c_str(),
-                                                                m_menu->menu_model(),
-                                                                &error);
-            if (id) {
-                m_exported_menu_ids.insert(id);
-            } else {
-                if (error != nullptr) {
-                    g_warning("cannot export %s menu: %s",
-                              profile_name.c_str(), error->message);
-                }
-                g_clear_error(&error);
-            }
+        const auto path = std::string(INDICATOR_BUS_PATH) + "/menu";
+        m_exported_menu_id = g_dbus_connection_export_menu_model(m_bus,
+                                                                 path.c_str(),
+                                                                 m_menu->menu_model(),
+                                                                 &error);
+        if (error != nullptr) {
+            g_warning("cannot export menu: %s", error->message);
+            g_clear_error(&error);
         }
+
         m_client->create_subscription();
         m_client->refresh();
     }
@@ -127,7 +120,7 @@ private:
     }
 
 
-    std::set<guint> m_exported_menu_ids;
+    guint m_exported_menu_id = 0;
     guint m_own_id = 0;
     guint m_exported_actions_id = 0;
     GDBusConnection* m_bus = nullptr;
