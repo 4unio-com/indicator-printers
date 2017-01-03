@@ -44,9 +44,9 @@ public:
         PhoneGreeter,
         NUM_PROFILES
     };
-    Menu(const std::shared_ptr<Actions>& actions,
-         const std::shared_ptr<Client>& client);
-    virtual ~Menu() = default;
+    explicit Menu(const std::shared_ptr<Actions>& actions,
+                  const std::shared_ptr<Client>& client);
+    virtual ~Menu();
 
     GMenuModel* menu_model();
 
@@ -55,6 +55,10 @@ public:
 private:
     class Impl;
     std::unique_ptr<Impl> p;
+
+    // disable copying 
+    Menu(const Menu&) = delete; 
+    Menu& operator=(const Menu&) = delete; 
 };
 
 } // namespace printers

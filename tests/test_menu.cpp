@@ -70,20 +70,15 @@ TEST_F(MenuFixture, Menu)
     auto client = std::make_shared<MockClient>();
 
     // Test for initialization
-    auto menu = new Menu(actions, client);
+    auto menu = std::make_shared<Menu>(actions, client);
     ASSERT_FALSE(nullptr == menu);
 
     // Test refresh
     Job fake_job;
-    // The following EXPECT_CALL results in:
-    // ERROR: this mock object (used in test MenuFixture.Menu) should
-    // be deleted but never is.
-    // ERROR: 1 leaked mock object found at program exit.
-    /*
+
     EXPECT_CALL(*client, refresh()).Times(1)
-        .WillOnce(Invoke([client, &fake_job](){
+        .WillOnce(Invoke([&client, &fake_job](){
                     client->m_job_state_changed(fake_job);
                 }));
-    */
     client->refresh();
 }

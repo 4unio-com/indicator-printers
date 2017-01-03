@@ -57,7 +57,7 @@ public:
     {
         m_actions = actions;
         m_client = client;
-        m_menu = new Menu(m_actions, m_client);
+        m_menu.reset(new Menu(m_actions, m_client));
         m_own_id = g_bus_own_name(G_BUS_TYPE_SESSION,
                                   INDICATOR_BUS_NAME,
                                   G_BUS_NAME_OWNER_FLAGS_ALLOW_REPLACEMENT,
@@ -133,7 +133,7 @@ private:
     GDBusConnection* m_bus = nullptr;
     std::shared_ptr<Actions> m_actions;
     std::shared_ptr<Client> m_client;
-    Menu* m_menu;
+    std::shared_ptr<Menu> m_menu;
 };
 
 

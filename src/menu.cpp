@@ -155,6 +155,10 @@ Menu::Menu(const std::shared_ptr<Actions>& actions,
 {
 }
 
+Menu::~Menu()
+{
+}
+
 GMenuModel* Menu::menu_model()
 {
     return p->menu_model();
