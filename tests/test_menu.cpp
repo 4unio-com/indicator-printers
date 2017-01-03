@@ -75,6 +75,10 @@ TEST_F(MenuFixture, Menu)
 
     // Test refresh
     Job fake_job;
+    fake_job.id = 42;
+    fake_job.name = "The Meaning of Life, The Universe, and Everything";
+    fake_job.printer.description = "Deep Thought";
+    fake_job.printer.name = "deep-thought";
 
     EXPECT_CALL(*client, refresh()).Times(1)
         .WillOnce(Invoke([&client, &fake_job](){
