@@ -119,7 +119,7 @@ public:
 
     GVariant* create_header_state()
     {
-        auto title_v = g_variant_new_string(_("Printers"));
+        auto title_v = g_variant_new_string(_("Printing"));
         const bool visible = !m_current_jobs.empty();
         GVariantBuilder b;
         g_variant_builder_init(&b, G_VARIANT_TYPE_VARDICT);
