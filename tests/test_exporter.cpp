@@ -90,7 +90,7 @@ TEST_F(ExporterFixture, Publish)
     }
 
     // confirm the actions that we expect
-    EXPECT_EQ(1, names.count("printers"));
+    EXPECT_EQ(1u, names.count("printers"));
 
     // try closing the connection prematurely
     // to test Exporter's name-lost signal
