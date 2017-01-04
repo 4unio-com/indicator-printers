@@ -6,6 +6,7 @@ Build-Depends:
  cmake,
  cmake-extras (>= 0.10),
  debhelper (>= 9),
+ dbus,
  dh-translations,
  googletest | google-mock,
  intltool,
