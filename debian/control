@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Ubuntu Desktop Team <ubuntu-desktop@lists.ubuntu.com>
 Build-Depends:
  cmake,
- cmake-extras (>= 0.10)
+ cmake-extras (>= 0.10),
  debhelper (>= 9),
  dh-translations,
  googletest | google-mock,
