@@ -74,14 +74,26 @@ TEST_F(MenuFixture, Menu)
     ASSERT_FALSE(nullptr == menu);
 
     // Test refresh
-    Job fake_job;
-    fake_job.id = 42;
-    fake_job.name = "The Meaning of Life, The Universe, and Everything";
-    fake_job.printer.description = "Deep Thought";
-    fake_job.printer.name = "deep-thought";
-
     EXPECT_CALL(*client, refresh()).Times(1)
-        .WillOnce(Invoke([&client, &fake_job](){
+        .WillOnce(Invoke([&client](){
+                    // Create a fake job, defaults to PENDING
+                    Job fake_job;
+                    fake_job.id = 42;
+                    fake_job.name = "Life, The Universe, and Everything";
+                    fake_job.printer.description = "Deep Thought";
+                    fake_job.printer.name = "deep-thought";
+                    client->m_job_state_changed(fake_job);
+
+                    // Test switching to HELD
+                    fake_job.state = Job::State::HELD;
+                    client->m_job_state_changed(fake_job);
+
+                    // Test switching to PROCESSING
+                    fake_job.state = Job::State::PROCESSING;
+                    client->m_job_state_changed(fake_job);
+
+                    // Test switching to COMPLETED
+                    fake_job.state = Job::State::COMPLETED;
                     client->m_job_state_changed(fake_job);
                 }));
     client->refresh();

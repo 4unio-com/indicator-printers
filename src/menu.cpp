@@ -21,7 +21,7 @@
 
 #include <algorithm>
 #include <iterator>
-#include <vector>
+#include <map>
 
 namespace unity {
 namespace indicator {
@@ -31,6 +31,10 @@ namespace printers {
 class Menu::Impl
 {
 public:
+
+    static constexpr char const * ATTRIBUTE_JOB_ID {"x-canonical-job-id"};
+    static constexpr char const * ATTRIBUTE_TYPE {"x-canonical-type"};
+    static constexpr char const * TYPE_SECTION {"section"};
 
     enum Section {
         CURRENT,
@@ -55,19 +59,37 @@ public:
                         job.name.c_str(),
                         printer.description.empty() ? printer.name.c_str() : printer.description.c_str());
 
+                // Remove any existing menu item for the job.
+                remove(job);
+
+                Section section = NUM_SECTIONS;
                 switch (job.state) {
                 case Job::State::PENDING:
+                    section = QUEUED;
                     break;
                 case Job::State::HELD:
+                    section = PAUSED;
                     break;
                 case Job::State::PROCESSING:
+                    section = CURRENT;
                     break;
                 case Job::State::STOPPED:
                 case Job::State::CANCELED:
                 case Job::State::ABORTED:
                 case Job::State::COMPLETED:
-                    break;
+                    update_header();
+                    return;
                 }
+
+                auto model = menu_model_for_section(section);
+                if (model != nullptr) {
+                    auto item = create_job_menu_item(job);
+                    g_menu_append_item(G_MENU(model), item);
+                    g_object_unref(item);
+                    m_current_jobs[job.id] = section;
+                }
+
+                update_header();
             });
     }
 
@@ -97,13 +119,14 @@ public:
 
     GVariant* create_header_state()
     {
-        const auto title = _("Printers");
-
+        auto title_v = g_variant_new_string(_("Printers"));
+        const bool visible = !m_current_jobs.empty();
         GVariantBuilder b;
         g_variant_builder_init(&b, G_VARIANT_TYPE_VARDICT);
-        g_variant_builder_add(&b, "{sv}", "title", g_variant_new_string(title));
+        g_variant_builder_add(&b, "{sv}", "title", title_v);
+        g_variant_builder_add(&b, "{sv}", "accessible-desc", title_v);
         g_variant_builder_add(&b, "{sv}", "icon", get_serialized_icon("printer-symbolic"));
-        g_variant_builder_add(&b, "{sv}", "visible", g_variant_new_boolean(true));
+        g_variant_builder_add(&b, "{sv}", "visible", g_variant_new_boolean(visible));
         return g_variant_builder_end(&b);
     }
 
@@ -112,12 +135,102 @@ public:
         return G_MENU_MODEL(m_menu);
     }
 
+    GMenuModel* menu_model_for_section(Section section)
+    {
+        return g_menu_model_get_item_link(G_MENU_MODEL(m_submenu),
+                                          section,
+                                          G_MENU_LINK_SECTION);
+    }
+
+    void remove(const Job& job)
+    {
+        Section section = NUM_SECTIONS;
+        if(get_current_section_for_job(job, section)) {
+            auto model = menu_model_for_section(section);
+            auto value = g_variant_new_uint32(job.id);
+            auto pos = find_matching_menu_item(model, ATTRIBUTE_JOB_ID, value);
+
+            if (pos >= 0) {
+                g_menu_remove(G_MENU(model), pos);
+                m_current_jobs.erase(job.id);
+            }
+        }
+    }
+
 private:
     std::shared_ptr<Actions> m_actions;
     std::shared_ptr<Client> m_client;
+    std::map<uint32_t, Section> m_current_jobs;
 
     GMenu* m_submenu = nullptr;
     GMenu* m_menu = nullptr;
+
+    static GMenuItem* create_section_menu_item(const Section& section)
+    {
+        const char* label;
+        switch (section) {
+        case CURRENT:
+            label = _("Current jobs");
+            break;
+        case QUEUED:
+            label = _("Queued jobs");
+            break;
+        case PAUSED:
+            label = _("Paused jobs");
+            break;
+        default:
+            return nullptr;
+        }
+
+        // create a new item
+        auto item = g_menu_item_new(label, "indicator.section");
+        g_menu_item_set_attribute(item, ATTRIBUTE_TYPE, "s", TYPE_SECTION);
+
+        return item;
+    }
+
+    // Create the GMenuItem for the job.
+    static GMenuItem* create_job_menu_item(const Job& job)
+    {
+        GMenuItem* menu_item = nullptr;
+
+        menu_item = g_menu_item_new(job.name.c_str(), nullptr);
+        g_menu_item_set_attribute(menu_item, ATTRIBUTE_JOB_ID, "u", job.id);
+
+        return menu_item;
+    }
+
+    // find the position of the menumodel's item with the specified attribute
+    static int find_matching_menu_item(GMenuModel* mm, const char* attr,
+                                       GVariant* value)
+    {
+        g_return_val_if_fail(value != nullptr, -1);
+
+        for (int i = 0, n = g_menu_model_get_n_items(mm); i < n; ++i) {
+            auto test = g_menu_model_get_item_attribute_value(mm,
+                                                              i,
+                                                              attr,
+                                                              nullptr);
+            const bool equal = g_variant_equal(value, test);
+            g_clear_pointer(&test, g_variant_unref);
+            if (equal) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    bool get_current_section_for_job(const Job& job, Section& section) const
+    {
+        const auto it = m_current_jobs.find(job.id);
+        if (it == m_current_jobs.end()) {
+            return false;
+        }
+
+        section = it->second;
+        return true;
+    }
 
     void create_gmenu()
     {
@@ -126,8 +239,17 @@ private:
         // build the submenu
         m_submenu = g_menu_new();
         for(int i = 0; i < NUM_SECTIONS; i++) {
+            // Create the section menu
             auto section = g_menu_new();
             g_menu_append_section(m_submenu, nullptr, G_MENU_MODEL(section));
+
+            // Add the label menuitem for the section
+            auto item = create_section_menu_item(static_cast<Section>(i));
+            if (item != nullptr) {
+                g_menu_insert_item(section, 0, item);
+                g_clear_object(&item);
+            }
+
             g_object_unref(section);
         }
 

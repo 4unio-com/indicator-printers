@@ -37,10 +37,10 @@ namespace printers {
         } State;
         State state = PENDING;
 
-        unsigned int id;
+        uint32_t id;
         std::string name;
         std::string state_reasons;
-        unsigned int impressions_completed;
+        uint32_t impressions_completed;
 
         Printer printer;
     };
