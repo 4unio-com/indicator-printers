@@ -25,7 +25,7 @@ namespace printers {
 /**
  * \brief Production implementation of the Actions interface.
  *
- * Delegates URLs, sets the timezone via org.freedesktop.timedate1, etc.
+ * Open a URL or launch a command for an action.
  *
  * @see MockActions
  */

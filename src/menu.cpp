@@ -101,7 +101,7 @@ public:
     void update_header()
     {
         auto action_group = m_actions->action_group();
-        std::string action_name{ "printers"};
+        std::string action_name{"printers"};
         auto state = create_header_state();
         g_action_group_change_action_state(action_group,
                                            action_name.c_str(),
@@ -179,6 +179,8 @@ private:
             label = _("Paused jobs");
             break;
         default:
+            g_warning("Request for section title of unknown section: %u",
+                      static_cast<uint32_t>(section));
             return nullptr;
         }
 
@@ -192,9 +194,7 @@ private:
     // Create the GMenuItem for the job.
     static GMenuItem* create_job_menu_item(const Job& job)
     {
-        GMenuItem* menu_item = nullptr;
-
-        menu_item = g_menu_item_new(job.name.c_str(), nullptr);
+        auto menu_item = g_menu_item_new(job.name.c_str(), nullptr);
         g_menu_item_set_attribute(menu_item, ATTRIBUTE_JOB_ID, "u", job.id);
 
         return menu_item;

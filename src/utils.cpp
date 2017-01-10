@@ -20,7 +20,8 @@ namespace unity {
 namespace indicator {
 namespace printers {
 
-std::string Utilities::prepend_snap_path(const std::string& path) {
+std::string Utilities::prepend_snap_path(const std::string& path)
+{
     auto get_snap_path = []() {
         const char* env_snap = getenv("SNAP");
         if (env_snap == nullptr) {
@@ -28,8 +29,7 @@ std::string Utilities::prepend_snap_path(const std::string& path) {
         }
         return env_snap;
     };
-    std::string SNAP_PATH{get_snap_path()};
-    return SNAP_PATH + path;
+    return get_snap_path() + path;
 }
 
 } // printers

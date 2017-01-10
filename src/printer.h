@@ -36,7 +36,7 @@ namespace printers {
         std::string text;
         std::string uri;
         std::string state_reasons;
-        bool accepting_jobs;
+        bool accepting_jobs = false;
     };
 
 } // printers

@@ -37,8 +37,8 @@ namespace printers {
 class Menu
 {
 public:
-    explicit Menu(const std::shared_ptr<Actions>& actions,
-                  const std::shared_ptr<Client>& client);
+    Menu(const std::shared_ptr<Actions>& actions,
+         const std::shared_ptr<Client>& client);
     virtual ~Menu();
 
     GMenuModel* menu_model();

@@ -34,22 +34,22 @@ namespace printers {
 
     class CupsClient : public Client {
     public:
-        explicit CupsClient();
+        CupsClient();
         virtual ~CupsClient();
 
         // Signals corresponding to printers
-        core::Signal<const Printer&>& printer_state_changed();
+        core::Signal<const Printer&>& printer_state_changed() override;
 
         // Signals corresponding to jobs
-        core::Signal<const Job&>& job_state_changed();
+        core::Signal<const Job&>& job_state_changed() override;
 
         // Methods to manage notification monitoring
-        virtual void create_subscription();
-        virtual void renew_subscription();
-        virtual void cancel_subscription();
+        virtual void create_subscription() override;
+        virtual void renew_subscription() override;
+        virtual void cancel_subscription() override;
 
-        // To iniitalize the indicator with current jobs
-        virtual void refresh();
+        // To initialize the indicator with current jobs
+        virtual void refresh() override;
 
     private:
         class Impl;

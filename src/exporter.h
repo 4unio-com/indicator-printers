@@ -38,8 +38,8 @@ namespace printers {
 class Exporter
 {
 public:
-    explicit Exporter();
-    ~Exporter();
+    Exporter();
+    virtual ~Exporter();
 
     core::Signal<>& name_lost();
 

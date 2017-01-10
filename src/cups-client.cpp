@@ -57,7 +57,13 @@ public:
 
     ~Impl()
     {
-        g_clear_object(&m_notifier_proxy);
+        if (m_notifier_proxy != nullptr) {
+            g_signal_handlers_disconnect_by_data(m_notifier_proxy, this);
+            g_clear_object(&m_notifier_proxy);
+        }
+
+        // Cancel the subscription from cups, so its notifier can exit.
+        cancel_subscription();
     }
 
     // Signals to propagate
@@ -151,7 +157,7 @@ public:
 
         resp = cupsDoRequest (CUPS_HTTP_DEFAULT, req, "/");
         if (!resp || cupsLastError() != IPP_OK) {
-            g_warning ("Error subscribing to CUPS notifications: %s\n",
+            g_warning ("Error unsubscribing to CUPS notifications: %s\n",
                        cupsLastErrorString ());
             return;
         }
@@ -161,15 +167,16 @@ public:
 
     void refresh()
     {
-        int num_dests, num_jobs;
+        int num_dests;
         cups_dest_t* dests;
-        cups_job_t* jobs;
 
         num_dests = cupsGetDests(&dests);
         for (int i = 0; i < num_dests; i++) {
             auto printer = get_printer_info(dests[i].name);
-            num_jobs = cupsGetJobs(&jobs, dests[i].name,
-                                   true, CUPS_WHICHJOBS_ACTIVE);
+
+            cups_job_t* jobs;
+            const auto num_jobs = cupsGetJobs(&jobs, dests[i].name,
+                                              true, CUPS_WHICHJOBS_ACTIVE);
             for (int j = 0; j < num_jobs; j++) {
                 Job job;
                 job.id = jobs[j].id;
@@ -214,7 +221,7 @@ private:
     static gboolean on_subscription_timeout(gpointer gthis)
     {
         static_cast<Impl*>(gthis)->renew_subscription();
-        return true;
+        return G_SOURCE_CONTINUE;
     }
 
     static void on_job_changed (Notifier*,
@@ -271,8 +278,8 @@ private:
         self->m_printer_state_changed(printer);
     }
 
-    int m_subscription_id;
-    Notifier* m_notifier_proxy;
+    int m_subscription_id = 0;
+    Notifier* m_notifier_proxy = nullptr;
     core::Signal<const Printer&> m_printer_state_changed;
     core::Signal<const Job&> m_job_state_changed;
 };
