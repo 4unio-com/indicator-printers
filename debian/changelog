@@ -1,3 +1,9 @@
+indicator-printers (0.1.7+17.04.20170112-0ubuntu1) zesty; urgency=medium
+
+  * Update printing indicator to work under Unity 8 with new design.
+
+ -- Rodney Dawes <rodney.dawes@canonical.com>  Thu, 12 Jan 2017 15:33:24 +0000
+
 indicator-printers (0.1.7+17.04.20161201-0ubuntu1) zesty; urgency=medium
 
   [ Michael Terry ]
