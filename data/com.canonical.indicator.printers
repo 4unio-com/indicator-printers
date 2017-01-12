@@ -1,0 +1,20 @@
+[Indicator Service]
+Name=indicator-printers
+ObjectPath=/com/canonical/indicator/printers
+Position=90
+
+[desktop]
+ObjectPath=/com/canonical/indicator/printers/menu
+
+[desktop_greeter]
+ObjectPath=/com/canonical/indicator/printers/menu
+
+[desktop_lockscreen]
+ObjectPath=/com/canonical/indicator/printers/menu
+
+[phone]
+ObjectPath=/com/canonical/indicator/printers/menu
+
+[phone_greeter]
+ObjectPath=/com/canonical/indicator/printers/menu
+

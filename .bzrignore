@@ -27,3 +27,5 @@ src/*.la
 src/*.lo
 src/cups-notifier.[ch]
 
+build/
+
